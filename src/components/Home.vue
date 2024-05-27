@@ -1,11 +1,7 @@
 <script>
-export default {
-  name: 'HomeView'
-}
 </script>
 
 <template>
-  <h1>Welcome to the home page</h1>
   <main>
     <TheWelcome />
   </main>
