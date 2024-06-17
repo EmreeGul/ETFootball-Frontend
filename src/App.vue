@@ -10,6 +10,10 @@ export default {
 <template>
   <navbar></navbar>
   <router-view/>
+  <div>
+    <AvailableTeamsComponent />
+    <FavouriteTeamsComponent />
+  </div>
 </template>
 
 
