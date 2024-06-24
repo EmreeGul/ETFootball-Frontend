@@ -1,31 +1,39 @@
 <script>
-
 import axios from 'axios'
 
 export default {
-  name: 'Post',
-  data () {
+  name: 'Comment',
+  data() {
     return {
-      comment: []
+      comments: [],
+      comment: {
+        title: '',
+        content: ''
+      }
     }
   },
   methods: {
-    fetchMyComment () {
-      axios.get('http://localhost:8080/comment', 'https://etfootball-backend.onrender.com/comment')
+    fetchMyComment() {
+      axios.get('http://localhost:8080/', 'https://etfootball-backend.onrender.com/')
         .then(response => {
-          this.comment = response.data
+          this.comments = response.data
         })
         .catch(error => {
-          console.error('There was an error fetching the posts from localhost!', error)
+          console.error('There was an error fetching the comments from localhost!', error)
         })
     },
-    fetchMyPostsFromComment () {
-      axios.get('https://forum-webtech.onrender.com/comment')
+    submitComment() {
+      axios({
+        method: 'post',
+        url: 'http://localhost:8080/', // replace with your actual API endpoint
+        data: this.comment,
+        headers: { 'Content-Type': 'application/json' }
+      })
         .then(response => {
-          this.comment = response.data
+          this.comments = response.data
         })
         .catch(error => {
-          console.error('There was an error fetching the posts from Render!', error)
+          console.error('There was an error posting the comment!', error)
         })
     }
   }
@@ -34,16 +42,24 @@ export default {
 
 <template>
   <div>
-  <h1>Comment</h1>
-  <button type="button" @click="fetchMyComment">My posts</button>
-  <button type="button" @click="fetchMyPostsFromComment">My comments</button>
-  <div v-if="comment.length">
-    <h2>My Posts:</h2>
-    <ul>
-      <li v-for="post in comment" :key="post.id">{{ post.title }}</li>
-    </ul>
+    <h1>Comment</h1>
+    <button type="button" @click="fetchMyComment">My Comments</button>
+    <div v-if="comments.length">
+      <h2>My Comments:</h2>
+      <ul>
+        <li v-for="comment in comments" :key="comment.id">{{ comment.title }}</li>
+      </ul>
+    </div>
+    <h1>Submit Comment</h1>
+    <form @submit.prevent="submitComment">
+      <input type="text" v-model="comment.title" placeholder="Title" />
+      <input type="text" v-model="comment.content" placeholder="Content" />
+      <button type="submit">Submit</button>
+    </form>
+
   </div>
-</div>
+
+
 </template>
 
 <style scoped>
