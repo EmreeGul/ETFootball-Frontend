@@ -35,8 +35,24 @@ export default {
         .catch(error => {
           console.error('There was an error posting the comment!', error)
         })
+    },
+    submitCommentRender() {
+      axios({
+        method: 'post',
+        url: 'https://etfootball-backend.onrender.com/',
+        data: this.comment,
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(response => {
+          this.comments = response.data
+        })
+        .catch(error => {
+          console.error('There was an error posting the comment!', error)
+        })
     }
   }
+
+
 }
 </script>
 
@@ -44,7 +60,7 @@ export default {
   <div>
     <h1>Comment</h1>
     <div class="comment-container">
-      <form @submit.prevent="submitComment" class="comment-form">
+      <form @submit.prevent="submitComment, submitCommentRender" class="comment-form">
         <input type="text" v-model="comment.title" placeholder="Title" />
         <input type="text" v-model="comment.content" placeholder="Content" />
         <button type="submit">Submit</button>
