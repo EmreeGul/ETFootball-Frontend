@@ -25,7 +25,7 @@ export default {
     submitComment() {
       axios({
         method: 'post',
-        url: 'http://localhost:8080/', // replace with your actual API endpoint
+        url: 'http://localhost:8080/',
         data: this.comment,
         headers: { 'Content-Type': 'application/json' }
       })
@@ -43,24 +43,49 @@ export default {
 <template>
   <div>
     <h1>Comment</h1>
-    <button type="button" @click="fetchMyComment">My Comments</button>
+    <div class="comment-container">
+      <form @submit.prevent="submitComment" class="comment-form">
+        <input type="text" v-model="comment.title" placeholder="Title" />
+        <input type="text" v-model="comment.content" placeholder="Content" />
+        <button type="submit">Submit</button>
+      </form>
+      <button type="button" @click="fetchMyComment" class="my-comments-button">My Comments</button>
+    </div>
     <div v-if="comments.length">
       <h2>My Comments:</h2>
       <ul>
         <li v-for="comment in comments" :key="comment.id">{{ comment.title }}</li>
       </ul>
     </div>
-    <h1>Submit Comment</h1>
-    <form @submit.prevent="submitComment">
-      <input type="text" v-model="comment.title" placeholder="Title" />
-      <input type="text" v-model="comment.content" placeholder="Content" />
-      <button type="submit">Submit</button>
-    </form>
-
   </div>
-
-
 </template>
 
+
+
 <style scoped>
+
+.comment-container button {
+  margin-left: auto;
+
+}
+.my-comments-button {
+  position: absolute;
+  right: 250px;
+}
+
+.comment-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+h1 {
+  position: absolute;
+  left: 0px;
+  top: 350px;}
+
+.comment-form {
+  position: absolute;
+  left: 0px;
+}
+
 </style>
