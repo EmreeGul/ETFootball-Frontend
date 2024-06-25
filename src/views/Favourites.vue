@@ -73,6 +73,17 @@ export default {
   right: 250px;
 }
 
+h2 {
+  position: absolute;
+  right: 160px;
+  bottom: 380px;
+}
+li {
+  position: relative;
+  top: 80px;
+  left: 490px;
+}
+
 .comment-container {
   display: flex;
   flex-direction: column;
@@ -81,7 +92,7 @@ export default {
 h1 {
   position: absolute;
   left: 0px;
-  top: 350px;}
+  top: 300px;}
 
 .comment-form {
   position: absolute;
