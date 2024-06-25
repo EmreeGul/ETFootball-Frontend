@@ -1,5 +1,5 @@
 <script>
-import axios from 'axios'
+import axios from 'axios';
 
 export default {
   name: 'Comment',
@@ -14,45 +14,40 @@ export default {
   },
   methods: {
     fetchMyComment() {
-      axios.get('http://localhost:8080/', 'https://etfootball-backend.onrender.com/')
+      axios.get('https://etfootball-backend.onrender.com/')
         .then(response => {
-          this.comments = response.data
+          this.comments = response.data;
         })
         .catch(error => {
-          console.error('There was an error fetching the comments from localhost!', error)
-        })
+          console.error('There was an error fetching the comments!', error);
+        });
     },
     submitComment() {
-      axios({
-        method: 'post',
-        url: 'http://localhost:8080/',
-        data: this.comment,
+      // Post to local server
+      axios.post('http://localhost:8080/', this.comment, {
         headers: { 'Content-Type': 'application/json' }
       })
-        .then(response => {
-          this.comments = response.data
+        .then(localResponse => {
+          // Update comments with local response
+          this.comments = localResponse.data;
         })
         .catch(error => {
-          console.error('There was an error posting the comment!', error)
-        })
-    },
-    submitCommentRender() {
-      axios({
-        method: 'post',
-        url: 'https://etfootball-backend.onrender.com/',
-        data: this.comment,
+          console.error('There was an error posting the comment locally!', error);
+        });
+
+      // Post to render server
+      axios.post('https://etfootball-backend.onrender.com/', this.comment, {
         headers: { 'Content-Type': 'application/json' }
       })
-        .then(response => {
-          this.comments = response.data
+        .then(renderResponse => {
+          // Optionally handle render response if different from local
+          console.log('Comment posted to render server:', renderResponse.data);
         })
         .catch(error => {
-          console.error('There was an error posting the comment!', error)
-        })
+          console.error('There was an error posting the comment to render server!', error);
+        });
     }
   }
-
-
 }
 </script>
 
@@ -60,7 +55,7 @@ export default {
   <div>
     <h1>Comment</h1>
     <div class="comment-container">
-      <form @submit.prevent="submitComment, submitCommentRender" class="comment-form">
+      <form @submit.prevent="submitComment" class="comment-form">
         <input type="text" v-model="comment.title" placeholder="Title" />
         <input type="text" v-model="comment.content" placeholder="Content" />
         <button type="submit">Submit</button>
@@ -76,14 +71,11 @@ export default {
   </div>
 </template>
 
-
-
 <style scoped>
-
 .comment-container button {
   margin-left: auto;
-
 }
+
 .my-comments-button {
   position: absolute;
   right: 250px;
@@ -94,6 +86,7 @@ h2 {
   right: 160px;
   bottom: 380px;
 }
+
 li {
   position: relative;
   top: 80px;
@@ -105,14 +98,15 @@ li {
   flex-direction: column;
   align-items: center;
 }
+
 h1 {
   position: absolute;
   left: 0px;
-  top: 300px;}
+  top: 300px;
+}
 
 .comment-form {
   position: absolute;
   left: 0px;
 }
-
 </style>
