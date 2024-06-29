@@ -23,17 +23,6 @@ export default {
         });
     },
     submitComment() {
-      // Post to local server
-      axios.post('http://localhost:8080/', this.comment, {
-        headers: { 'Content-Type': 'application/json' }
-      })
-        .then(localResponse => {
-          // Update comments with local response
-          this.comments = localResponse.data;
-        })
-        .catch(error => {
-          console.error('There was an error posting the comment locally!', error);
-        });
 
       // Post to render server
       axios.post('https://etfootball-backend.onrender.com/', this.comment, {
