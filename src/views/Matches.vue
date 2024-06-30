@@ -1,93 +1,104 @@
-<script>
-export default {
-  name: 'Matches',
-  data() {
-    return {
-      matches: [
-        { id: 1, date: '2023-06-28', team1: 'Germany', team2: 'Denmark', score: '2:0' },
-        { id: 2, date: '2023-06-29', team1: 'Spain', team2: 'Georgia' },
-        { id: 3, date: '2023-07-01', team1: 'Turkey', team2: 'Austria' }
-      ],
-      yesterdayMatches: [],
-      todayMatches: [],
-      futureMatches: [],
-      selectedDate: null
-    }
-  },
-  methods: {
-    fetchMatches() {
-      const today = new Date();
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      const futureDate = new Date(today);
-      futureDate.setDate(today.getDate() + 2); // Hier können Sie das Datum anpassen
-
-      const formattedToday = today.toISOString().split('T')[0];
-      const formattedYesterday = yesterday.toISOString().split('T')[0];
-      const formattedFutureDate = futureDate.toISOString().split('T')[0];
-
-      this.yesterdayMatches = this.matches.filter(match => match.date === formattedYesterday);
-      this.todayMatches = this.matches.filter(match => match.date === formattedToday);
-      this.futureMatches = this.matches.filter(match => match.date === formattedFutureDate);
-    }
-  },
-  created() {
-    this.fetchMatches();
-  }
-}
-</script>
-
-
 <template>
-  <div>
-    <h1>EM Matches</h1>
-    <div class="timeline">
-      <div class="timeline-item">
-        <h2>Yesterday's Matches</h2>
-        <ul>
-          <li v-for="match in yesterdayMatches" :key="match.id">{{ match.date }}: {{ match.team1 }} vs {{ match.team2 }} - {{ match.score }}</li>
-        </ul>
+  <div class="container">
+    <h1>Your Favorite Teams</h1>
+    <div class="favorites" v-if="favorites.length > 0">
+      <div class="favorite" v-for="favorite in favorites" :key="favorite.id">
+        <img :src="favorite.flag" :alt="favorite.name" />
+        <span>{{ favorite.name }} - Next game in {{ favorite.nextGameIn }} days</span>
+        <button @click="removeFavorite(favorite.id)">Remove</button>
       </div>
-      <div class="timeline-item">
-        <h2>Today's Matches</h2>
-        <ul>
-          <li v-for="match in todayMatches" :key="match.id">{{ match.date }}: {{ match.team1 }} vs {{ match.team2 }}</li>
-        </ul>
-      </div>
-      <div class="timeline-item">
-        <h2>Future Matches</h2>
-        <ul>
-          <li v-for="match in futureMatches" :key="match.id">{{ match.date }}: {{ match.team1 }} vs {{ match.team2 }}</li>
-        </ul>
-      </div>
+    </div>
+    <div v-else>
+      <p>No favorite teams yet.</p>
     </div>
   </div>
 </template>
 
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'Matches',
+  data() {
+    return {
+      favorites: []
+    };
+  },
+  created() {
+    this.fetchFavorites();
+  },
+  methods: {
+    fetchFavorites() {
+      axios.get('https://etfootball-backend.onrender.com/favorites')
+        .then(response => {
+          this.favorites = response.data.map(favorite => ({
+            ...favorite,
+            flag: require(`@/assets/${favorite.flag}`) // Pfad zu den Bildern
+          }));
+        })
+        .catch(error => {
+          console.error('Error fetching favorites:', error);
+        });
+    },
+    removeFavorite(id) {
+      if (confirm('Are you sure you want to remove this favorite?')) {
+        axios.delete(`https://etfootball-backend.onrender.com/favorites/${id}`)
+          .then(() => {
+            this.fetchFavorites();
+          })
+          .catch(error => {
+            console.error('Error removing favorite:', error);
+          });
+      }
+    }
+  }
+}
+</script>
 
 <style scoped>
-h1 {
-  margin-top: 20px;
+.container {
+  padding: 20px;
   text-align: center;
 }
 
-.timeline {
+.favorites {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.timeline-item {
-  margin: 20px 0;
+.favorite {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 200px;
+  text-align: center;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+.favorite img {
+  width: 50px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
-li {
-  margin: 10px 0;
+.favorite span {
+  display: block;
+  margin-top: 5px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #ff1a1a;
 }
 </style>

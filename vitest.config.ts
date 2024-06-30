@@ -8,6 +8,7 @@ export default mergeConfig(
     test: {
       environment: 'jsdom',
       exclude: [...configDefaults.exclude, 'e2e/**'],
+      include: ['src/components/__tests__/**/*.{test,spec}.{ts,tsx}'], // Definiere das Muster für Testdateien
       root: fileURLToPath(new URL('./', import.meta.url))
     }
   })
