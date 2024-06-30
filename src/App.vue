@@ -10,15 +10,12 @@ export default {
 <template>
   <navbar></navbar>
   <router-view/>
-  <div>
-    <AvailableTeamsComponent />
-    <FavouriteTeamsComponent />
-  </div>
 </template>
-
 
 <style>
 body {
   background-color: #b7c2c5;
 }
+
+
 </style>
