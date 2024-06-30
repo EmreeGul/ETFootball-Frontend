@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 export default {
-  name: 'CommentForum',
+  name: 'Comment Forum',
   data() {
     return {
       comments: [],
@@ -46,7 +46,7 @@ export default {
 
 <template>
   <div>
-    <h1>Comment Forum</h1>
+    <h1>Comment</h1>
     <div class="comment-container">
       <form @submit.prevent="submitComment" class="comment-form">
         <input type="text" v-model="comment.title" placeholder="Title" />
@@ -64,7 +64,7 @@ export default {
       </ul>
     </div>
     <div v-if="selectedComment">
-      <h3>{{ selectedComment.title }}:</h3>
+      <h3>Comment Content von {{ selectedComment.title }}:</h3>
       <p>{{ selectedComment.content }}</p>
     </div>
   </div>
@@ -73,35 +73,40 @@ export default {
 <style scoped>
 .comment-container button {
   margin-left: auto;
-  margin-top: 20px;
 }
 
 .my-comments-button {
-  margin-right: 20px;
+  position: absolute;
+  right: 250px;
 }
 
 h2 {
-  margin-right: 20px;
-  margin-top: 20px;
+  position: absolute;
+  right: 160px;
+  bottom: 380px;
 }
 
 li {
-  margin-top: 10px;
+  position: relative;
+  top: 80px;
+  left: 490px;
 }
 
 .comment-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
 }
 
 h1 {
-  margin-top: 30px;
+  position: absolute;
+  left: 0px;
+  top: 300px;
 }
 
 .comment-form {
-  margin-top: 20px;
+  position: absolute;
+  left: 0px;
 }
 
 h3 {
